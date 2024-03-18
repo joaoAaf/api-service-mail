@@ -2,6 +2,7 @@ package estudo.servicemail.services;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import okhttp3.MediaType;
@@ -13,6 +14,9 @@ import okhttp3.Response;
 @Service
 public class EmailService {
 
+    @Value("${MAIL_TOKEN}")
+    private String mailToken;
+
     public Response sendEmail(String from, String to, String subject, String text)
             throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -23,7 +27,7 @@ public class EmailService {
         Request request = new Request.Builder()
                 .url("https://send.api.mailtrap.io/api/send")
                 .method("POST", body)
-                .addHeader("Authorization", "Bearer 150ee8920d34bf60b667a379d264854b")
+                .addHeader("Authorization", "Bearer " + mailToken)
                 .addHeader("Content-Type", "application/json")
                 .build();
         return client.newCall(request).execute();
