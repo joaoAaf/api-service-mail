@@ -6,22 +6,29 @@ import org.springframework.web.bind.annotation.RestController;
 import estudo.servicemail.dto.Email;
 import estudo.servicemail.services.EmailService;
 
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("email")
 public class EmailController {
-    private final EmailService emailService;
-
-    public EmailController(EmailService emailService) {
-        this.emailService = emailService;
-    }
+    
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping
-    public void postEmail(@RequestBody Email email) {
-        emailService.sendEmail(email);
+    public ResponseEntity<Void> postEmail(@RequestBody Email email) {
+        try {
+            emailService.sendEmail("noreply@devchinelo.com.br", email.to(), email.subject(), email.body());
+            return ResponseEntity.noContent().build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.unprocessableEntity().build();
+        }
     }
-    
+
 }
