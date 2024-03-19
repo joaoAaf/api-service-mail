@@ -1,5 +1,5 @@
 package estudo.servicemail.dto;
 
-public record Email(String to, String subject, String body) {
+public record Email(String name, String to, String subject, String text, String category) {
     
 }

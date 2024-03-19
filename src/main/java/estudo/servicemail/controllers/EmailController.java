@@ -23,7 +23,7 @@ public class EmailController {
     @PostMapping
     public ResponseEntity<Void> postEmail(@RequestBody Email email) {
         try {
-            emailService.sendEmail("noreply@devchinelo.com.br", email.to(), email.subject(), email.body());
+            emailService.sendEmail("noreply@devchinelo.com.br", email);
             return ResponseEntity.noContent().build();
         } catch (IOException e) {
             e.printStackTrace();

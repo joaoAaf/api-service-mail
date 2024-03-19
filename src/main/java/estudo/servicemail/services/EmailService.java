@@ -5,32 +5,34 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import estudo.servicemail.dto.Email;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 @Service
 public class EmailService {
 
-    @Value("${MAIL_TOKEN}")
-    private String mailToken;
+        @Value("${MAIL_TOKEN}")
+        private String mailToken;
 
-    public Response sendEmail(String from, String to, String subject, String text)
-            throws IOException {
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create("{\"from\":{\"email\":\"" + from
-                + "\",\"name\":\"Mailtrap Test\"},\"to\":[{\"email\":\"" + to + "\"}],\"subject\":\"" + subject
-                + "\",\"text\":\"" + text + "\",\"category\":\"Integration Test\"}", mediaType);
-        Request request = new Request.Builder()
-                .url("https://send.api.mailtrap.io/api/send")
-                .method("POST", body)
-                .addHeader("Authorization", "Bearer " + mailToken)
-                .addHeader("Content-Type", "application/json")
-                .build();
-        return client.newCall(request).execute();
-    }
+        public void sendEmail(String from, Email email)
+                        throws IOException {
+                OkHttpClient client = new OkHttpClient().newBuilder().build();
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create("{\"from\":{\"email\":\"" + from
+                                + "\",\"name\":\"" + email.name() + "\"},\"to\":[{\"email\":\"" + email.to()
+                                + "\"}],\"subject\":\"" + email.subject()
+                                + "\",\"text\":\"" + email.text() + "\",\"category\":\"" + email.category() + "\"}",
+                                mediaType);
+                Request request = new Request.Builder()
+                                .url("https://send.api.mailtrap.io/api/send")
+                                .method("POST", body)
+                                .addHeader("Authorization", "Bearer " + mailToken)
+                                .addHeader("Content-Type", "application/json")
+                                .build();
+                client.newCall(request).execute().close();
+        }
 
 }
