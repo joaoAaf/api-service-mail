@@ -2,7 +2,6 @@ package estudo.servicemail.services;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import estudo.servicemail.dto.DataEmail;
@@ -14,14 +13,10 @@ import okhttp3.RequestBody;
 @Service
 public class EmailService {
 
-        @Value("${MAIL_TOKEN}")
-        private String mailToken;
-
-        public void sendEmail(String from, DataEmail email)
-                        throws IOException {
+        public void sendEmail(DataEmail email) throws IOException {
                 OkHttpClient client = new OkHttpClient().newBuilder().build();
                 MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create("{\"from\":{\"email\":\"" + from
+                RequestBody body = RequestBody.create("{\"from\":{\"email\":\"" + System.getenv("MAIL_FROM")
                                 + "\",\"name\":\"" + email.name() + "\"},\"to\":[{\"email\":\"" + email.to()
                                 + "\"}],\"subject\":\"" + email.subject() + "\",\"text\":\"" + email.text()
                                 + "\",\"category\":\"" + email.category() + "\"}",
@@ -29,7 +24,7 @@ public class EmailService {
                 Request request = new Request.Builder()
                                 .url("https://send.api.mailtrap.io/api/send")
                                 .method("POST", body)
-                                .addHeader("Authorization", "Bearer " + mailToken)
+                                .addHeader("Authorization", "Bearer " + System.getenv("MAIL_TOKEN"))
                                 .addHeader("Content-Type", "application/json")
                                 .build();
                 client.newCall(request).execute().close();
