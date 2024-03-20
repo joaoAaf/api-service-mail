@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import estudo.servicemail.dto.Email;
+import estudo.servicemail.dto.DataEmail;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,14 +17,14 @@ public class EmailService {
         @Value("${MAIL_TOKEN}")
         private String mailToken;
 
-        public void sendEmail(String from, Email email)
+        public void sendEmail(String from, DataEmail email)
                         throws IOException {
                 OkHttpClient client = new OkHttpClient().newBuilder().build();
                 MediaType mediaType = MediaType.parse("application/json");
                 RequestBody body = RequestBody.create("{\"from\":{\"email\":\"" + from
                                 + "\",\"name\":\"" + email.name() + "\"},\"to\":[{\"email\":\"" + email.to()
-                                + "\"}],\"subject\":\"" + email.subject()
-                                + "\",\"text\":\"" + email.text() + "\",\"category\":\"" + email.category() + "\"}",
+                                + "\"}],\"subject\":\"" + email.subject() + "\",\"text\":\"" + email.text()
+                                + "\",\"category\":\"" + email.category() + "\"}",
                                 mediaType);
                 Request request = new Request.Builder()
                                 .url("https://send.api.mailtrap.io/api/send")

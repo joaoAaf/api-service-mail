@@ -3,8 +3,9 @@ package estudo.servicemail.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import estudo.servicemail.dto.Email;
+import estudo.servicemail.dto.DataEmail;
 import estudo.servicemail.services.EmailService;
+import jakarta.validation.Valid;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<Void> postEmail(@RequestBody Email email) {
+    public ResponseEntity<Void> postEmail(@RequestBody @Valid DataEmail email) {
         try {
             emailService.sendEmail("noreply@devchinelo.com.br", email);
             return ResponseEntity.noContent().build();
